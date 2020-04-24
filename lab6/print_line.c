@@ -28,9 +28,6 @@ int main(int argc, char** argv) {
        exit(1);
     }
     size_t line_count = 0;
-    /*for(int i = 0; i < line_count; i++) {
-        printf("%lu %lu\n", table[i].line_offset, table[i].line_size);
-    }*/
     size_t table_size = INIT_SIZE;
     table_element* table = malloc(table_size * sizeof(table_element));
     if(table == NULL) {
@@ -79,23 +76,15 @@ void print_lines(int fd, table_element* table, size_t line_count) {
     int tty_fd;
     ssize_t read_ret;
     char buf[READ_COUNT];
-    int line_num = 1;
-    const char* tty = "/dev/tty";
-    if((tty_fd = open(tty, O_RDONLY)) == -1) {
-        perror(tty);
-        close(fd);
-        exit(1);
-    }
     struct pollfd tty_pollfd;
-    tty_pollfd.fd = tty_fd;
+    tty_pollfd.fd = 0;
     tty_pollfd.events = POLLIN;
     int poll_time = 5000;
     printf("Enter number of line in 5 seconds to start:\n");
     int poll_ret = poll(&tty_pollfd, 1, poll_time); 
     if(poll_ret == -1) {
-        perror(tty);
+        perror("Cannot work with terminal");
         close(fd);
-        close(tty_fd);
         free(table);
         exit(1);
     }

@@ -69,35 +69,26 @@ void create_line_table(char* file_map, off_t file_size, table_element* table, si
 }
 
 void print_lines(char* file_map, table_element* table, size_t line_count) {
-    int tty_fd;
     ssize_t read_ret;
     char buf[READ_COUNT];
     int line_num = 1;
-    const char* tty = "/dev/tty";
-    if((tty_fd = open(tty, O_RDONLY)) == -1) {
-        perror(tty);
-        exit(1);
-    }
     struct pollfd tty_pollfd;
-    tty_pollfd.fd = tty_fd;
+    tty_pollfd.fd = 0;
     tty_pollfd.events = POLLIN;
     int poll_time = 5000;
     printf("Enter number of line in 5 seconds to start:\n");
     int poll_ret = poll(&tty_pollfd, 1, poll_time); 
     if(poll_ret == -1) {
-        perror(tty);
-        close(tty_fd);
+        perror("Cannot work with terminal");
         free(table);
         exit(1);
     }
     if(poll_ret == 0) {
         printf("Time is over!\n");
         printf("%s", file_map);
-        close(tty_fd);
         free(table);
         exit(0);
     }
-    close(tty_fd); 
 
     char new_line_ch = '\n';
     while((read_ret = read(1, buf, READ_COUNT)) != -1) {

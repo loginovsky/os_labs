@@ -26,9 +26,6 @@ int main(int argc, char** argv) {
        exit(1);
     }
     size_t line_count = 0;
-    /*for(int i = 0; i < line_count; i++) {
-        printf("%lu %lu\n", table[i].line_offset, table[i].line_size);
-    }*/
     size_t table_size = INIT_SIZE;
     table_element* table = malloc(table_size * sizeof(table_element));
     if(table == NULL) {
